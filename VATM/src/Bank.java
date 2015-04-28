@@ -1,5 +1,5 @@
 /**
-    A simple bank with a single accounts.
+    A simple bank with a single account.
     Garrett and Austin will be implementing the actual Bank
 */
 public class Bank
