@@ -245,8 +245,9 @@ public class ATMFrame extends JFrame {
     private class CancelButtonListener implements ActionListener {  
         public void actionPerformed(ActionEvent event) {  
             int state = theATM.getState();
-            if (state == DisplayDriver.START || state == DisplayDriver.ACCTFAIL)
+            if (state == DisplayDriver.START || state == DisplayDriver.ACCTFAIL) {
                 System.exit(0);
+            }
             else {
                 balanceButton.setSelected(false);
                 balanceLabel.setText(" $ _____ ");

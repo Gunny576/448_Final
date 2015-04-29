@@ -10,10 +10,10 @@ public class DisplayDriver {
     private Bank theBank;
     
     public static final int START = 1;
-    public static final int PIN = 2;
-    public static final int TRANSACT = 3;
-    public static final int ACCTFAIL = 4;
-    public static final int PINFAIL = 5;
+    public static final int ACCTFAIL = 2;
+    public static final int PIN = 3;
+    public static final int PINFAIL = 4;
+    public static final int TRANSACT = 5;
     public static final int WITHDRAW = 6;
     public static final int DEPOSIT = 7;
     
