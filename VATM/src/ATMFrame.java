@@ -220,19 +220,23 @@ public class ATMFrame extends JFrame {
                 theATM.setAccountNumber((int) pad.getValue());
                 break;
             case DisplayDriver.PIN:
-                balanceButton.setSelected(false);
-                balanceLabel.setText(" $ _____ ");
                 // Intentional fall-through
             case DisplayDriver.PINFAIL:
+                balanceButton.setSelected(false);
+                balanceLabel.setText(" $ _____ ");
                 theATM.attemptPin((int) pad.getValue());
                 break;
             case DisplayDriver.TRANSACT:
                 // No action
                 break;
             case DisplayDriver.DEPOSIT:
+                balanceButton.setSelected(false);
+                balanceLabel.setText(" $ _____ ");
                 theATM.deposit(pad.getValue());
                 break;
             case DisplayDriver.WITHDRAW:
+                balanceButton.setSelected(false);
+                balanceLabel.setText(" $ _____ ");
                 theATM.withdraw(pad.getValue());
                 break;
             default:

@@ -1,10 +1,12 @@
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 /**
     A JPanel component that simulates a number pad for numerical entry.
@@ -17,7 +19,7 @@ public class NumPad extends JPanel {
     
     private JPanel buttonPanel;
     private JButton clearButton;
-    private JTextField display;
+    private JLabel display;
     private String pinString;
     private int state;
     
@@ -43,19 +45,17 @@ public class NumPad extends JPanel {
         setLayout(new BorderLayout());
         
         // Add display field
-    
-        display = new JTextField();
+        display = new JLabel();
+        display.setText("");
         add(display, "North");
         
         pinString = "";
 
         // Make button panel
-
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(4, 3));
         
         // Add digit buttons
-        
         addButton("7");
         addButton("8");
         addButton("9");
@@ -69,7 +69,6 @@ public class NumPad extends JPanel {
         addButton(".");
         
         // Add clear entry button
-        
         clearButton = new JButton("CLR");
         buttonPanel.add(clearButton);
 
@@ -79,12 +78,14 @@ public class NumPad extends JPanel {
                 pinString = "";
             }
         }
-        ActionListener listener = new ClearButtonListener();        
 
         clearButton.addActionListener(new 
                 ClearButtonListener());        
         
         add(buttonPanel, "Center");
+        display.setPreferredSize(new Dimension(buttonPanel.getWidth(), 20));
+        display.setMinimumSize(new Dimension(buttonPanel.getWidth(), 20));
+        display.setBorder(new EmptyBorder(0, 4, 0, 4));
         setState(START);
         setSize(300, 300);
     }
