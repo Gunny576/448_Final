@@ -14,6 +14,8 @@ public class DisplayDriver {
     public static final int TRANSACT = 3;
     public static final int ACCTFAIL = 4;
     public static final int PINFAIL = 5;
+    public static final int WITHDRAW = 6;
+    public static final int DEPOSIT = 7;
     
     /**
         Constructor for the DisplayDriver class
@@ -79,7 +81,16 @@ public class DisplayDriver {
         else
             state = PINFAIL;
     }
-
+    
+    /** 
+        Changes the state to WITHDRAW. 
+        (Precondition: state is TRANSACT)
+    */
+    public void selectWithdraw() {
+        assert state == TRANSACT;
+        state = WITHDRAW;
+    }
+    
     /** 
         Withdraws amount from current account. 
         (Precondition: state is TRANSACT)
@@ -88,8 +99,18 @@ public class DisplayDriver {
     public void withdraw(double value) {  
         assert state == TRANSACT;
         theBank.withdraw(accountNumber, accountPin, value);
+        back();
     }
-
+    
+    /** 
+        Changes the state to DEPOSIT. 
+        (Precondition: state is TRANSACT)
+    */
+    public void selectDeposit() {
+        assert state == TRANSACT;
+        state = DEPOSIT;
+    }
+    
     /** 
         Deposits amount to current account. 
         (Precondition: state is TRANSACT)
@@ -98,6 +119,7 @@ public class DisplayDriver {
     public void deposit(double value) {  
         assert state == TRANSACT;
         theBank.deposit(accountNumber, accountPin, value);
+        back();
     }
 
     /** 
@@ -114,7 +136,10 @@ public class DisplayDriver {
         Moves back to the initial state.
     */
     public void back() {
-        state = START;
+        if (state > TRANSACT)
+            state = TRANSACT;
+        else
+            state = START;
     }
 
     /**

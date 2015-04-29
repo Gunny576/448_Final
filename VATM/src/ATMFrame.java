@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
@@ -44,7 +45,7 @@ public class ATMFrame extends JFrame {
     private DisplayDriver theATM;
     private static final int FRAME_WIDTH = 300;
     private static final int FRAME_HEIGHT = 300;
-    private static final Color BACKGROUND = Color.ORANGE;
+    private static final Color BACKGROUND = new Color(0, 206, 209);
     
     /**
         Constructor for the ATM GUI.
@@ -88,8 +89,12 @@ public class ATMFrame extends JFrame {
         
         balanceButton = new JToggleButton("Show Balance");
         balanceButton.addActionListener(new BButtonListener());
-        balanceLabel = new JLabel("");
+        balanceLabel = new JLabel(" $ _____ ");
         balanceLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        balanceLabel.setBackground(Color.BLACK);
+        balanceLabel.setOpaque(true);
+        balanceLabel.setForeground(Color.GREEN);
+        balanceLabel.setFont(new Font("Serif", Font.BOLD, 18));
 
         buttonPanel = new JPanel();
         buttonPanel.add(OKButton);
@@ -160,11 +165,31 @@ public class ATMFrame extends JFrame {
             display.setText("<html><center>Account " 
                     + theATM.getAccountNumber() 
                     + "<br>Select transaction type or view balance</center></html>");
-            cancelButton.setText("Cancel");
+            cancelButton.setText("Logout");
             remove(padArea);
             padArea.setVisible(false);
             add(transactArea, BorderLayout.CENTER);
             transactArea.setVisible(true);
+            break;
+        case DisplayDriver.DEPOSIT:
+            display.setText("<html><center>Account " 
+                    + theATM.getAccountNumber() 
+                    + "<br>Enter amount to deposit</center></html>");
+            cancelButton.setText("Cancel");
+            remove(transactArea);
+            transactArea.setVisible(false);
+            add(padArea, BorderLayout.CENTER);
+            padArea.setVisible(true);
+            break;
+        case DisplayDriver.WITHDRAW:
+            display.setText("<html><center>Account " 
+                    + theATM.getAccountNumber() 
+                    + "<br>Enter amount to withdraw</center></html>");
+            cancelButton.setText("Cancel");
+            remove(transactArea);
+            transactArea.setVisible(false);
+            add(padArea, BorderLayout.CENTER);
+            padArea.setVisible(true);
             break;
         case DisplayDriver.START:
         default:
@@ -196,14 +221,21 @@ public class ATMFrame extends JFrame {
                 break;
             case DisplayDriver.PIN:
                 balanceButton.setSelected(false);
-                balanceLabel.setText("");
+                balanceLabel.setText(" $ _____ ");
                 // Intentional fall-through
             case DisplayDriver.PINFAIL:
                 theATM.attemptPin((int) pad.getValue());
                 break;
             case DisplayDriver.TRANSACT:
-                //theATM.withdraw(pad.getValue());
-                //theATM.back();
+                // No action
+                break;
+            case DisplayDriver.DEPOSIT:
+                theATM.deposit(pad.getValue());
+                break;
+            case DisplayDriver.WITHDRAW:
+                theATM.withdraw(pad.getValue());
+                break;
+            default:
                 break;
             }
             showState();
@@ -215,8 +247,11 @@ public class ATMFrame extends JFrame {
             int state = theATM.getState();
             if (state == DisplayDriver.START || state == DisplayDriver.ACCTFAIL)
                 System.exit(0);
-            else
+            else {
+                balanceButton.setSelected(false);
+                balanceLabel.setText(" $ _____ ");
                 theATM.back();
+            }
             showState();
         }
     }
@@ -225,8 +260,7 @@ public class ATMFrame extends JFrame {
         public void actionPerformed(ActionEvent event) {  
             int state = theATM.getState();
             if (state == DisplayDriver.TRANSACT) {
-                //theATM.deposit(pad.getValue());
-                //theATM.back();
+                theATM.selectDeposit();
             }
             showState();
         }
@@ -236,8 +270,7 @@ public class ATMFrame extends JFrame {
         public void actionPerformed(ActionEvent event) {  
             int state = theATM.getState();
             if (state == DisplayDriver.TRANSACT) {
-                //theATM.withdraw(pad.getValue());
-                //theATM.back();
+                theATM.selectWithdraw();
             }
             showState();
         }
@@ -249,10 +282,10 @@ public class ATMFrame extends JFrame {
             if (state == DisplayDriver.TRANSACT) {
                 if (balanceButton.isSelected()) {
                     double balance = theATM.getBalance();
-                    balanceLabel.setText("$ " + String.format("%.2f", balance));
+                    balanceLabel.setText(" $ " + String.format("%.2f", balance) + " ");
                 }
                 else {
-                    balanceLabel.setText("");
+                    balanceLabel.setText(" $ _____ ");
                 }
             }
             showState();

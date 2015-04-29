@@ -26,6 +26,8 @@ public class NumPad extends JPanel {
     public static final int TRANSACT = 3;
     public static final int ACCTFAIL = 4;
     public static final int PINFAIL = 5;
+    public static final int WITHDRAW = 6;
+    public static final int DEPOSIT = 7;
     
     /**
         Constructor for the keypad class.
@@ -108,6 +110,9 @@ public class NumPad extends JPanel {
                         pinString = pinString + label;
                         display.setText(display.getText() + '*');
                     }
+                }
+                else if (display.getText().contains(".") && display.getText().substring(display.getText().indexOf('.')).length() > 2) {
+                    return;
                 }
                 else
                     // Append label text to display
