@@ -20,6 +20,12 @@ public class Bank
         aBalance = amount;
     }
     
+    public int createAccount(int accountNumber, int accountPin) {
+    	anAccount = accountNumber;
+    	aPin = accountPin;
+    	return anAccount;
+    }
+    
     public boolean findAccount(int accountNumber) {  
         return (accountNumber == anAccount);
     }

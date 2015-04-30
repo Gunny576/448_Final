@@ -6,8 +6,11 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Color;
+
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JRootPane;
@@ -33,11 +36,14 @@ public class ATMFrame extends JFrame {
     private JToggleButton balanceButton;
     private JButton cancelButton;
     private JButton OKButton;
+    private JButton createButton;
     
     private JLabel display;
     private JLabel balanceLabel;
+    private JLabel blankLabel;
     private NumPad pad;
     private JPanel buttonPanel;
+    private JPanel bottomPanel;
     private JPanel padArea;
     private JPanel transactPanel;
     private JPanel transactArea;
@@ -46,6 +52,8 @@ public class ATMFrame extends JFrame {
     private static final int FRAME_WIDTH = 300;
     private static final int FRAME_HEIGHT = 300;
     private static final Color BACKGROUND = new Color(0, 206, 209);
+    
+    private double transactResult = -2.0;
     
     /**
         Constructor for the ATM GUI.
@@ -81,6 +89,12 @@ public class ATMFrame extends JFrame {
         cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(new CancelButtonListener());
         
+        createButton = new JButton("Create New Account");
+        createButton.addActionListener(new CreateButtonListener());
+        blankLabel = new JLabel("     ");
+        blankLabel.setBackground(BACKGROUND);
+        blankLabel.setOpaque(true);
+        
         depositButton = new JButton("Deposit");
         depositButton.addActionListener(new DButtonListener());
 
@@ -102,6 +116,13 @@ public class ATMFrame extends JFrame {
         buttonPanel.add(cancelButton);
         buttonPanel.setBackground(BACKGROUND);
         
+        bottomPanel = new JPanel();
+        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
+        bottomPanel.add(buttonPanel);
+        bottomPanel.add(createButton);
+        createButton.setVisible(true);
+        bottomPanel.setBackground(BACKGROUND);
+        
         transactPanel = new JPanel();
         transactPanel.setLayout(new GridLayout(4, 1, 5, 5));
         transactPanel.add(balanceButton);
@@ -119,7 +140,7 @@ public class ATMFrame extends JFrame {
         master = (BorderLayout)getLayout();
         add(display, BorderLayout.NORTH);
         add(padArea, BorderLayout.CENTER);
-        add(buttonPanel, BorderLayout.SOUTH);
+        add(bottomPanel, BorderLayout.SOUTH);
         showState();
         
         JRootPane rootPane = SwingUtilities.getRootPane(OKButton); 
@@ -144,6 +165,9 @@ public class ATMFrame extends JFrame {
             transactArea.setVisible(false);
             add(padArea, BorderLayout.CENTER);
             padArea.setVisible(true);
+            bottomPanel.remove(blankLabel);
+            bottomPanel.add(createButton);
+            createButton.setVisible(true);
             break;
         case DisplayDriver.PIN:
             display.setText("<html><center>Enter PIN,<br>then press OK</center></html>");
@@ -152,6 +176,9 @@ public class ATMFrame extends JFrame {
             transactArea.setVisible(false);
             add(padArea, BorderLayout.CENTER);
             padArea.setVisible(true);
+            bottomPanel.remove(createButton);
+            createButton.setVisible(false);
+            bottomPanel.add(blankLabel);
             break;
         case DisplayDriver.PINFAIL:
             display.setText("<html><center>Error: Wrong PIN<br>Please try again</center></html>");
@@ -160,7 +187,32 @@ public class ATMFrame extends JFrame {
             transactArea.setVisible(false);
             add(padArea, BorderLayout.CENTER);
             padArea.setVisible(true);
+            bottomPanel.remove(createButton);
+            createButton.setVisible(false);
+            bottomPanel.add(blankLabel);
             break;
+        case DisplayDriver.CREATEACCT:
+        	display.setText("<html><center>Enter account number for new account,<br>then press OK</center></html>");
+            cancelButton.setText("Cancel");
+            remove(transactArea);
+            transactArea.setVisible(false);
+            add(padArea, BorderLayout.CENTER);
+            padArea.setVisible(true);
+            bottomPanel.remove(createButton);
+            createButton.setVisible(false);
+            bottomPanel.add(blankLabel);
+        	break;
+        case DisplayDriver.CREATEPIN:
+        	display.setText("<html><center>Enter PIN for new account,<br>then press OK</center></html>");
+            cancelButton.setText("Cancel");
+            remove(transactArea);
+            transactArea.setVisible(false);
+            add(padArea, BorderLayout.CENTER);
+            padArea.setVisible(true);
+            bottomPanel.remove(createButton);
+            createButton.setVisible(false);
+            bottomPanel.add(blankLabel);
+        	break;
         case DisplayDriver.TRANSACT:
             display.setText("<html><center>Account " 
                     + theATM.getAccountNumber() 
@@ -170,6 +222,28 @@ public class ATMFrame extends JFrame {
             padArea.setVisible(false);
             add(transactArea, BorderLayout.CENTER);
             transactArea.setVisible(true);
+            bottomPanel.remove(createButton);
+            createButton.setVisible(false);
+            bottomPanel.add(blankLabel);
+            if (transactResult >= -1.0) {
+            	if (theATM.getPrevState() == DisplayDriver.DEPOSIT) {
+            		if (transactResult >= 0) {
+            			JOptionPane.showMessageDialog(this, "Deposit of $" + String.format("%.2f", transactResult) + " was successful");
+            		}
+            		else {
+            			JOptionPane.showMessageDialog(this, "Error: Deposit unsuccessful");
+            		}
+            	}
+            	else if (theATM.getPrevState() == DisplayDriver.WITHDRAW) {
+            		if (transactResult >= 0) {
+            			JOptionPane.showMessageDialog(this, "Withdrawal of $" + String.format("%.2f", transactResult) + " was successful");
+            		}
+            		else {
+            			JOptionPane.showMessageDialog(this, "Error: Withdrawal unsuccessful");
+            		}
+            	}
+            	transactResult = -2.0;
+            }
             break;
         case DisplayDriver.DEPOSIT:
             display.setText("<html><center>Account " 
@@ -180,6 +254,9 @@ public class ATMFrame extends JFrame {
             transactArea.setVisible(false);
             add(padArea, BorderLayout.CENTER);
             padArea.setVisible(true);
+            bottomPanel.remove(createButton);
+            createButton.setVisible(false);
+            bottomPanel.add(blankLabel);
             break;
         case DisplayDriver.WITHDRAW:
             display.setText("<html><center>Account " 
@@ -190,6 +267,9 @@ public class ATMFrame extends JFrame {
             transactArea.setVisible(false);
             add(padArea, BorderLayout.CENTER);
             padArea.setVisible(true);
+            bottomPanel.remove(createButton);
+            createButton.setVisible(false);
+            bottomPanel.add(blankLabel);
             break;
         case DisplayDriver.START:
         default:
@@ -199,6 +279,12 @@ public class ATMFrame extends JFrame {
             transactArea.setVisible(false);
             add(padArea, BorderLayout.CENTER);
             padArea.setVisible(true);
+            bottomPanel.remove(blankLabel);
+            bottomPanel.add(createButton);
+            createButton.setVisible(true);
+            if (theATM.getPrevState() >= DisplayDriver.TRANSACT) {
+            	JOptionPane.showMessageDialog(this, "Successfully logged out");
+            }
             break;
         }
     }
@@ -211,11 +297,24 @@ public class ATMFrame extends JFrame {
         pad.setState(state);
     }
     
+    public void newAccountNumberFail() {
+    	JOptionPane.showMessageDialog(this, "Error: Account number already exists");
+    }
+    
+    public void newAccountPinFail() {
+    	JOptionPane.showMessageDialog(this, "Error: Invalid PIN");
+    }
+    
+    public void newAccountSuccess() {
+    	JOptionPane.showMessageDialog(this, "Successfully created new account");
+    }
+    
     private class OKButtonListener implements ActionListener {  
         public void actionPerformed(ActionEvent event) {  
             int state = theATM.getState();
             switch (state) {
             case DisplayDriver.START:
+            	// Intentional fall-through
             case DisplayDriver.ACCTFAIL:
                 theATM.setAccountNumber((int) pad.getValue());
                 break;
@@ -226,18 +325,31 @@ public class ATMFrame extends JFrame {
                 balanceLabel.setText(" $ _____ ");
                 theATM.attemptPin((int) pad.getValue());
                 break;
+            case DisplayDriver.CREATEACCT:
+            	if (!theATM.createAccountNumber((int) pad.getValue())) {
+            		newAccountNumberFail();
+            	}
+            	break;
+            case DisplayDriver.CREATEPIN:
+            	if (theATM.createPin((int) pad.getValue())) {
+            		newAccountSuccess();
+            	}
+            	else {
+            		newAccountPinFail();
+            	}
+            	break;
             case DisplayDriver.TRANSACT:
                 // No action
                 break;
             case DisplayDriver.DEPOSIT:
                 balanceButton.setSelected(false);
                 balanceLabel.setText(" $ _____ ");
-                theATM.deposit(pad.getValue());
+                transactResult = theATM.deposit(pad.getValue());
                 break;
             case DisplayDriver.WITHDRAW:
                 balanceButton.setSelected(false);
                 balanceLabel.setText(" $ _____ ");
-                theATM.withdraw(pad.getValue());
+                transactResult = theATM.withdraw(pad.getValue());
                 break;
             default:
                 break;
@@ -255,10 +367,21 @@ public class ATMFrame extends JFrame {
             else {
                 balanceButton.setSelected(false);
                 balanceLabel.setText(" $ _____ ");
+                transactResult = -2.0;
                 theATM.back();
             }
             showState();
         }
+    }
+    
+    private class CreateButtonListener implements ActionListener {
+    	public void actionPerformed(ActionEvent event) {
+    		int state = theATM.getState();
+    		if (state == DisplayDriver.START || state == DisplayDriver.ACCTFAIL) {
+    			theATM.createAccount();
+    		}
+    		showState();
+    	}
     }
     
     private class DButtonListener implements ActionListener {  

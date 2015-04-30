@@ -5,7 +5,9 @@ import javax.swing.JFrame;
 */
 public class DisplayDriver {
     private int state;
+    private int prevState;
     private int accountNumber;
+    private int newAccountNumber;
     private int accountPin;
     private Bank theBank;
     
@@ -13,9 +15,11 @@ public class DisplayDriver {
     public static final int ACCTFAIL = 2;
     public static final int PIN = 3;
     public static final int PINFAIL = 4;
-    public static final int TRANSACT = 5;
-    public static final int WITHDRAW = 6;
-    public static final int DEPOSIT = 7;
+    public static final int CREATEACCT = 5;
+    public static final int CREATEPIN = 6;
+    public static final int TRANSACT = 7;
+    public static final int WITHDRAW = 8;
+    public static final int DEPOSIT = 9;
     
     /**
         Constructor for the DisplayDriver class
@@ -32,8 +36,10 @@ public class DisplayDriver {
     */   
     private void init() {
         accountNumber = -1;
+        newAccountNumber = -1;
         accountPin = -1;
         state = START;
+        prevState = 0;
         
         JFrame frame = new ATMFrame(this);
         frame.setTitle("Group 8 Bank ATM");        
@@ -48,6 +54,7 @@ public class DisplayDriver {
     */
     public void setAccountNumber(int number) {
         assert state == START || state == ACCTFAIL;
+        prevState = state;
         if (theBank.findAccount(number)) {
             accountNumber = number;
             state = PIN;
@@ -74,6 +81,7 @@ public class DisplayDriver {
     */
     public void attemptPin(int pin) {
         assert state == PIN;
+        prevState = state;
         if (theBank.tryPin(accountNumber, pin)) {
             accountPin = pin;
             state = TRANSACT;
@@ -82,12 +90,57 @@ public class DisplayDriver {
             state = PINFAIL;
     }
     
+    public void createAccount() {
+    	assert state == START || state == ACCTFAIL;
+    	prevState = state;
+    	state = CREATEACCT;
+    }
+    
+    /** 
+	    Sets the account number for the new account
+	    (Precondition: state is CREATEACCT)
+	    @param accountNumber the number of the new account
+	*/
+    public boolean createAccountNumber(int aNumber) {
+    	assert state == CREATEACCT;
+    	if (theBank.findAccount(aNumber)) {
+    		back();
+    		return false;
+    	}
+    	else {
+	    	newAccountNumber = aNumber;
+	    	prevState = state;
+	    	state = CREATEPIN;
+	    	return true;
+    	}
+    }
+    
+    /** 
+	    Sets the PIN for the new account.
+	    (Precondition: state is CREATEPIN)
+	    @param accountPin the new PIN
+	*/
+    public boolean createPin(int aPin) {
+    	assert state == CREATEPIN;
+    	if (aPin >= 1000 && aPin <= 9999) {
+    		accountNumber = newAccountNumber;
+    		accountPin = aPin;
+    		theBank.createAccount(accountNumber, accountPin);
+    		back();
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}
+    }
+    
     /** 
         Changes the state to WITHDRAW. 
         (Precondition: state is TRANSACT)
     */
     public void selectWithdraw() {
         assert state == TRANSACT;
+        prevState = state;
         state = WITHDRAW;
     }
     
@@ -96,10 +149,16 @@ public class DisplayDriver {
         (Precondition: state is TRANSACT)
         @param value the amount to withdraw
     */
-    public void withdraw(double value) {  
+    public double withdraw(double value) {  
         assert state == TRANSACT;
-        theBank.withdraw(accountNumber, accountPin, value);
+        double result = theBank.withdraw(accountNumber, accountPin, value);
         back();
+        if (result >= 0) {
+        	return value;
+        }
+        else {
+        	return -1.0;
+        }
     }
     
     /** 
@@ -108,6 +167,7 @@ public class DisplayDriver {
     */
     public void selectDeposit() {
         assert state == TRANSACT;
+        prevState = state;
         state = DEPOSIT;
     }
     
@@ -116,10 +176,16 @@ public class DisplayDriver {
         (Precondition: state is TRANSACT)
         @param value the amount to deposit
     */
-    public void deposit(double value) {  
+    public double deposit(double value) {  
         assert state == TRANSACT;
-        theBank.deposit(accountNumber, accountPin, value);
+        double result = theBank.deposit(accountNumber, accountPin, value);
         back();
+        if (result >= 0) {
+        	return value;
+        }
+        else {
+        	return -1.0;
+        }
     }
 
     /** 
@@ -136,10 +202,13 @@ public class DisplayDriver {
         Moves back to the initial state.
     */
     public void back() {
-        if (state > TRANSACT)
+    	prevState = state;
+    	if (state > TRANSACT) {
             state = TRANSACT;
-        else
+        }
+        else {
             state = START;
+        }
     }
 
     /**
@@ -149,4 +218,12 @@ public class DisplayDriver {
     public int getState() {
         return state;
     }
+    
+    /**
+	    Gets the previous state of the ATM display.
+	    @return the previous state
+	*/
+	public int getPrevState() {
+	    return prevState;
+	}
 }
