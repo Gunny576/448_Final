@@ -23,6 +23,7 @@ public class Bank
     public int createAccount(int accountNumber, int accountPin) {
     	anAccount = accountNumber;
     	aPin = accountPin;
+    	aBalance = 0.0;
     	return anAccount;
     }
     
@@ -61,5 +62,11 @@ public class Bank
         }
         else
             return -1.0;
+    }
+    
+    public void closeAccount() {
+    	anAccount = -1;
+    	aPin = -1;
+    	aBalance = 0.0;
     }
 }

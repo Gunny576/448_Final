@@ -32,6 +32,7 @@ public class NumPad extends JPanel {
     public static final int TRANSACT = 7;
     public static final int WITHDRAW = 8;
     public static final int DEPOSIT = 9;
+    public static final int CLOSED = 10;
     
     /**
         Constructor for the keypad class.

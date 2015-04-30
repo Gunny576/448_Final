@@ -31,11 +31,12 @@ public class ATMFrame extends JFrame {
      */
     private static final long serialVersionUID = 1L;
 
-    private BorderLayout master;
+    private ATMFrame master;
     
     private JButton depositButton;
     private JButton withdrawalButton;
     private JToggleButton balanceButton;
+    private JButton closeButton;
     private JButton cancelButton;
     private JButton OKButton;
     private JButton createButton;
@@ -70,7 +71,9 @@ public class ATMFrame extends JFrame {
         Initialization method to keep the constructor clean.
     */
     private void init() {
-        pad = new NumPad();
+        master = this;
+    	
+    	pad = new NumPad();
         padArea = new JPanel();
         padArea.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -115,6 +118,9 @@ public class ATMFrame extends JFrame {
         balanceLabel.setForeground(Color.GREEN);
         balanceLabel.setFont(new Font("Serif", Font.BOLD, 18));
         
+        closeButton = new JButton("Close Account");
+        closeButton.addActionListener(new CButtonListener());
+        
         buttonPanel = new JPanel();
         buttonPanel.add(OKButton);
         buttonPanel.add(new JLabel("       "));
@@ -130,11 +136,12 @@ public class ATMFrame extends JFrame {
         bottomPanel.setBackground(BACKGROUND);
         
         transactPanel = new JPanel();
-        transactPanel.setLayout(new GridLayout(4, 1, 5, 5));
+        transactPanel.setLayout(new GridLayout(5, 1, 5, 5));
         transactPanel.add(balanceButton);
         transactPanel.add(balanceLabel);
         transactPanel.add(depositButton);
         transactPanel.add(withdrawalButton);
+        transactPanel.add(closeButton);
         transactPanel.setBackground(BACKGROUND);
         
         transactArea = new JPanel();
@@ -143,7 +150,6 @@ public class ATMFrame extends JFrame {
         transactArea.setBackground(BACKGROUND);
         
         setLayout(new BorderLayout());
-        master = (BorderLayout)getLayout();
         add(display, BorderLayout.NORTH);
         add(padArea, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
@@ -251,7 +257,7 @@ public class ATMFrame extends JFrame {
             			JOptionPane.showMessageDialog(this, "Withdrawal of $" + String.format("%.2f", transactResult) + " was successful");
             		}
             		else {
-            			JOptionPane.showMessageDialog(this, "Error: Withdrawal unsuccessful");
+            			JOptionPane.showMessageDialog(this, "Error: Insufficient funds");
             		}
             	}
             	transactResult = -2.0;
@@ -297,8 +303,11 @@ public class ATMFrame extends JFrame {
             blankLabel.setVisible(true);
             bottomPanel.add(createButton);
             createButton.setVisible(true);
-            if (theATM.getPrevState() >= DisplayDriver.TRANSACT) {
+            if (theATM.getPrevState() >= DisplayDriver.TRANSACT && theATM.getPrevState() < DisplayDriver.CLOSED) {
             	JOptionPane.showMessageDialog(this, "Successfully logged out");
+            }
+            else if (theATM.getPrevState() == DisplayDriver.CLOSED) {
+            	JOptionPane.showMessageDialog(this, "Account successfully closed");
             }
             break;
         }
@@ -428,6 +437,24 @@ public class ATMFrame extends JFrame {
                     balanceLabel.setText(" $ " + String.format("%.2f", balance) + " ");
                 }
                 else {
+                    balanceLabel.setText(" $ _____ ");
+                }
+            }
+            showState();
+        }
+    }
+    
+    private class CButtonListener implements ActionListener {  
+        public void actionPerformed(ActionEvent event) {  
+            int state = theATM.getState();
+            if (state == DisplayDriver.TRANSACT) {
+                int response = JOptionPane.showConfirmDialog(master, "Are you sure you want to close this account?", "Please Confirm", JOptionPane.YES_NO_OPTION);
+                if (response == JOptionPane.YES_OPTION) {
+                	theATM.closeAccount();
+                	theATM.back();
+                }
+                else {
+                	balanceButton.setSelected(false);
                     balanceLabel.setText(" $ _____ ");
                 }
             }

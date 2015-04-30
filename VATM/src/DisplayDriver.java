@@ -20,6 +20,7 @@ public class DisplayDriver {
     public static final int TRANSACT = 7;
     public static final int WITHDRAW = 8;
     public static final int DEPOSIT = 9;
+    public static final int CLOSED = 10;
     
     /**
         Constructor for the DisplayDriver class
@@ -197,13 +198,25 @@ public class DisplayDriver {
         assert state == TRANSACT;
         return theBank.getBalance(accountNumber, accountPin);
     }
+    
+    /**
+	    Closes the bank account.
+	*/
+    public void closeAccount() {
+    	assert state == TRANSACT;
+    	state = CLOSED;
+    	theBank.closeAccount();
+    }
 
     /**
         Moves back to the initial state.
     */
     public void back() {
     	prevState = state;
-    	if (state > TRANSACT) {
+    	if (state == CLOSED) {
+    		state = START;
+    	}
+    	else if (state > TRANSACT) {
             state = TRANSACT;
         }
         else {
