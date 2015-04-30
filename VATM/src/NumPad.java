@@ -103,9 +103,9 @@ public class NumPad extends JPanel {
                 // Don't add two decimal points
                 if (label.equals(".") && display.getText().indexOf(".") != -1) 
                     return;
-                else if (label.equals(".") && (state == START || state == ACCTFAIL || state == PIN || state == PINFAIL))
+                else if (label.equals(".") && (state == START || state == ACCTFAIL || state == PIN || state == PINFAIL || state == CREATEACCT ||state == CREATEPIN))
                     return;
-                else if (state == PIN || state == PINFAIL) {
+                else if (state == PIN || state == PINFAIL || state == CREATEPIN) {
                     if (display.getText().length() >= 4)
                         return;
                     else {
@@ -135,7 +135,7 @@ public class NumPad extends JPanel {
     */
     public double getValue() {  
         try {
-            if (state == PIN || state == PINFAIL)
+            if (state == PIN || state == PINFAIL || state == CREATEPIN)
                 return Double.parseDouble(pinString);
             else
                 return Double.parseDouble(display.getText());

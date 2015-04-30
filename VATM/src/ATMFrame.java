@@ -1,4 +1,6 @@
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -91,9 +93,12 @@ public class ATMFrame extends JFrame {
         
         createButton = new JButton("Create New Account");
         createButton.addActionListener(new CreateButtonListener());
-        blankLabel = new JLabel("     ");
+        blankLabel = new JLabel("                                                   ");
+        blankLabel.setPreferredSize(new Dimension(createButton.getWidth(), 26));
+        blankLabel.setMinimumSize(new Dimension(createButton.getWidth(), 26));
         blankLabel.setBackground(BACKGROUND);
-        blankLabel.setOpaque(true);
+        blankLabel.setVisible(false);
+        blankLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         depositButton = new JButton("Deposit");
         depositButton.addActionListener(new DButtonListener());
@@ -109,7 +114,7 @@ public class ATMFrame extends JFrame {
         balanceLabel.setOpaque(true);
         balanceLabel.setForeground(Color.GREEN);
         balanceLabel.setFont(new Font("Serif", Font.BOLD, 18));
-
+        
         buttonPanel = new JPanel();
         buttonPanel.add(OKButton);
         buttonPanel.add(new JLabel("       "));
@@ -120,6 +125,7 @@ public class ATMFrame extends JFrame {
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
         bottomPanel.add(buttonPanel);
         bottomPanel.add(createButton);
+        createButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         createButton.setVisible(true);
         bottomPanel.setBackground(BACKGROUND);
         
@@ -166,6 +172,7 @@ public class ATMFrame extends JFrame {
             add(padArea, BorderLayout.CENTER);
             padArea.setVisible(true);
             bottomPanel.remove(blankLabel);
+            blankLabel.setVisible(false);
             bottomPanel.add(createButton);
             createButton.setVisible(true);
             break;
@@ -179,6 +186,7 @@ public class ATMFrame extends JFrame {
             bottomPanel.remove(createButton);
             createButton.setVisible(false);
             bottomPanel.add(blankLabel);
+            blankLabel.setVisible(false);
             break;
         case DisplayDriver.PINFAIL:
             display.setText("<html><center>Error: Wrong PIN<br>Please try again</center></html>");
@@ -190,6 +198,7 @@ public class ATMFrame extends JFrame {
             bottomPanel.remove(createButton);
             createButton.setVisible(false);
             bottomPanel.add(blankLabel);
+            blankLabel.setVisible(false);
             break;
         case DisplayDriver.CREATEACCT:
         	display.setText("<html><center>Enter account number for new account,<br>then press OK</center></html>");
@@ -201,6 +210,7 @@ public class ATMFrame extends JFrame {
             bottomPanel.remove(createButton);
             createButton.setVisible(false);
             bottomPanel.add(blankLabel);
+            blankLabel.setVisible(false);
         	break;
         case DisplayDriver.CREATEPIN:
         	display.setText("<html><center>Enter PIN for new account,<br>then press OK</center></html>");
@@ -212,6 +222,7 @@ public class ATMFrame extends JFrame {
             bottomPanel.remove(createButton);
             createButton.setVisible(false);
             bottomPanel.add(blankLabel);
+            blankLabel.setVisible(false);
         	break;
         case DisplayDriver.TRANSACT:
             display.setText("<html><center>Account " 
@@ -225,6 +236,7 @@ public class ATMFrame extends JFrame {
             bottomPanel.remove(createButton);
             createButton.setVisible(false);
             bottomPanel.add(blankLabel);
+            blankLabel.setVisible(false);
             if (transactResult >= -1.0) {
             	if (theATM.getPrevState() == DisplayDriver.DEPOSIT) {
             		if (transactResult >= 0) {
@@ -257,6 +269,7 @@ public class ATMFrame extends JFrame {
             bottomPanel.remove(createButton);
             createButton.setVisible(false);
             bottomPanel.add(blankLabel);
+            blankLabel.setVisible(false);
             break;
         case DisplayDriver.WITHDRAW:
             display.setText("<html><center>Account " 
@@ -270,6 +283,7 @@ public class ATMFrame extends JFrame {
             bottomPanel.remove(createButton);
             createButton.setVisible(false);
             bottomPanel.add(blankLabel);
+            blankLabel.setVisible(false);
             break;
         case DisplayDriver.START:
         default:
@@ -280,6 +294,7 @@ public class ATMFrame extends JFrame {
             add(padArea, BorderLayout.CENTER);
             padArea.setVisible(true);
             bottomPanel.remove(blankLabel);
+            blankLabel.setVisible(true);
             bottomPanel.add(createButton);
             createButton.setVisible(true);
             if (theATM.getPrevState() >= DisplayDriver.TRANSACT) {
