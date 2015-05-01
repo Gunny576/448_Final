@@ -9,7 +9,7 @@ public class DisplayDriver {
     private int accountNumber;
     private int newAccountNumber;
     private int accountPin;
-    private Bank theBank;
+    private Control theBank;
     
     public static final int START = 1;
     public static final int ACCTFAIL = 2;
@@ -26,7 +26,7 @@ public class DisplayDriver {
         Constructor for the DisplayDriver class
         @param aBank the bank where all accounts reside
     */     
-    public DisplayDriver(Bank aBank) {
+    public DisplayDriver(Control aBank) {
         theBank = aBank;
         
         init();

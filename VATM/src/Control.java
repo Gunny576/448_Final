@@ -14,7 +14,7 @@ import java.nio.file.Path;
 
 import javax.imageio.IIOException;
 public class Control {
-	 String password;
+     String password;
 	 String sBalance;
 	 String filename;
 	 Model model;
@@ -37,17 +37,17 @@ public class Control {
 			double balance = 0;
 			
 			//br = new BufferedReader(new FileReader("src/database.txt"));
-			br = new BufferedReader(new FileReader("database.txt"));
+			br = new BufferedReader(new FileReader(name));
 			password = br.readLine();
 			sBalance = br.readLine();
 			//call for pass from user
-			String input = "";
-			balance = Integer.parseInt(sBalance);
+			//String input = "";
+			balance = java.lang.Double.parseDouble(sBalance);
 			model = new Model(balance);
-			while (password.equals(input))
-			{
+			//while (password.equals(input))
+			//{
 				//get new input
-			}
+			//}
 			}
 		 catch (IOException e) {
 			 return false;
@@ -63,10 +63,10 @@ public class Control {
 	}
 		 return true;
 	}
-	public boolean trypin(int pin)
+	public boolean tryPin(int account, int pin)
 	{
-		if (password.equals(pin))
-		return true;
+		if (Integer.parseInt(password) == pin)
+		    return true;
 		return false;
 	}
     public boolean createAccount(int accountNumber, int accountPin) {
@@ -76,10 +76,10 @@ public class Control {
         	PrintWriter writer = new PrintWriter(filename, "UTF-8");
         	writer.println(Integer.toString(accountPin));
         	password = Integer.toString(accountPin);
-        	sBalance = "0";
-        	writer.println("0");
+        	sBalance = "0.0";
+        	writer.println("0.0");
         	writer.close();
-        	model = new Model(0);
+        	model = new Model(0.0);
         }
         catch (IOException e)
         {
@@ -89,23 +89,22 @@ public class Control {
   }
     
     public double withdraw(int accountNumber, int accountPin, double amount) {
-    	double balance = Integer.parseInt(sBalance);
+    	double balance = java.lang.Double.parseDouble(sBalance);
         if (password.equals(Integer.toString(accountPin))) {
-        	double x = balance;
-        		balance = model.withdrawal(amount);
-                //call write
-        			if (balance == x)
-        			{
-        				return -1;
-        			}
-                if(FileWrite(balance))
-                {
-                	return balance;
-                }
-                else
-                {
-                	return -1;
-                }
+    		balance = model.withdrawal(amount);
+			if (balance < 0)
+			{
+				return -1;
+			}
+			else if(FileWrite(balance))
+            {
+            	sBalance = java.lang.Double.toString(balance);
+                return balance;
+            }
+            else
+            {
+            	return -1;
+            }
         }
         else
             return -1.0;
@@ -116,8 +115,8 @@ boolean FileWrite(double balance){
 		
 		try{
 			PrintWriter writer = new PrintWriter(filename , "UTF-8");
-			writer.write(password);
-			writer.write((int) balance);
+			writer.println(password);
+			writer.println(String.format("%.2f", balance));
 			writer.close();
 		}
 		
@@ -127,9 +126,9 @@ boolean FileWrite(double balance){
 		return true;
 	}
 public double getBalance(int accountNumber, int accountPin) {
-    if (password.equals(accountPin))
+    if (Integer.parseInt(password) == accountPin)
     {
-    	double balance = Integer.parseInt(sBalance);
+    	double balance = java.lang.Double.parseDouble(sBalance);
         return balance;
     }
     else
@@ -137,11 +136,12 @@ public double getBalance(int accountNumber, int accountPin) {
 }
 public double deposit(int accountNumber, int accountPin, double amount) {
     if (password.equals(Integer.toString(accountPin))) {
-    	double balance = Integer.parseInt(sBalance);
-        balance = (int) model.deposit(amount);
+    	double balance = java.lang.Double.parseDouble(sBalance);
+        balance = model.deposit(amount);
         if(FileWrite(balance))
         {
-        	return balance;
+            sBalance = java.lang.Double.toString(balance);
+            return balance;
         }
         else
         {

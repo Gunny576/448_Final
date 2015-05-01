@@ -28,10 +28,12 @@ public class Model {
 		//makes sure the user doesn't withdrawal more than they have.
 		if(accountBalance - cash >= 0){
 			
-			accountBalance -= cash;			
+			accountBalance -= cash;
+			return accountBalance;
 		}
-		
-		return accountBalance;
+		else {
+		    return -1.0;
+		}
 		
 	}
 }

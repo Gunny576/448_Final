@@ -15,7 +15,7 @@ public class ATMRun {
         DisplayDriver ATMdisplay;
 
         try {
-            Bank theBank = new Bank();
+            Control theBank = new Control();
             ATMdisplay = new DisplayDriver(theBank);
         }
         catch(Exception e) {
