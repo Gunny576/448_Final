@@ -85,15 +85,11 @@ public class Control {
   }
     
     public double withdraw(int accountNumber, int accountPin, double amount) {
-    	double balance = Integer.parseInt(sBalance);
+    	int balance = Integer.parseInt(sBalance);
         if (password.equals(Integer.toString(accountPin))) {
-        	double x = balance;
-        		balance = model.withdrawal(amount);
+            if (balance >= amount) {
+                balance -= amount;
                 //call write
-        			if (balance == x)
-        			{
-        				return -1;
-        			}
                 if(FileWrite(balance))
                 {
                 	return balance;
@@ -102,6 +98,9 @@ public class Control {
                 {
                 	return -1;
                 }
+            }
+            else
+                return -1.0;
         }
         else
             return -1.0;
@@ -125,7 +124,7 @@ boolean FileWrite(double balance){
 public double getBalance(int accountNumber, int accountPin) {
     if (password.equals(accountPin))
     {
-    	double balance = Integer.parseInt(sBalance);
+    	int balance = Integer.parseInt(sBalance);
         return balance;
     }
     else
@@ -133,8 +132,8 @@ public double getBalance(int accountNumber, int accountPin) {
 }
 public double deposit(int accountNumber, int accountPin, double amount) {
     if (password.equals(Integer.toString(accountPin))) {
-    	double balance = Integer.parseInt(sBalance);
-        balance = (int) model.deposit(amount);
+       	int balance = Integer.parseInt(sBalance);
+        balance += amount;
         if(FileWrite(balance))
         {
         	return balance;
@@ -148,7 +147,7 @@ public double deposit(int accountNumber, int accountPin, double amount) {
         return -1.0;
 }
 	
-	public boolean LogWriter(String actNum, double balance){
+	public boolean LogWriter(String actNum, int balance){
 		
 		String LogText = null;
 		

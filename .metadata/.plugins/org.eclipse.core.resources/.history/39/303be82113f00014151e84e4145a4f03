@@ -13,7 +13,6 @@ public class Control {
 	 String password;
 	 String sBalance;
 	 String filename;
-	 Model model;
 	public  void main(String Args[])
 	{
 
@@ -39,7 +38,6 @@ public class Control {
 			//call for pass from user
 			String input = "";
 			balance = Integer.parseInt(sBalance);
-			model = new Model(balance);
 			while (password.equals(input))
 			{
 				//get new input
@@ -71,11 +69,8 @@ public class Control {
         	filename += ".txt";
         	PrintWriter writer = new PrintWriter(filename, "UTF-8");
         	writer.println(Integer.toString(accountPin));
-        	password = Integer.toString(accountPin);
-        	sBalance = "0";
         	writer.println("0");
         	writer.close();
-        	model = new Model(0);
         }
         catch (IOException e)
         {
@@ -85,29 +80,25 @@ public class Control {
   }
     
     public double withdraw(int accountNumber, int accountPin, double amount) {
-    	double balance = Integer.parseInt(sBalance);
+    	int balance = Integer.parseInt(sBalance);
         if (password.equals(Integer.toString(accountPin))) {
-        	double x = balance;
-        		balance = model.withdrawal(amount);
+            if (balance >= amount) {
+                balance -= amount;
+                return balance;
                 //call write
-        			if (balance == x)
-        			{
-        				return -1;
-        			}
-                if(FileWrite(balance))
+                if(FileWritea(balance))
                 {
                 	return balance;
                 }
-                else
-                {
-                	return -1;
-                }
+            }
+            else
+                return -1.0;
         }
         else
             return -1.0;
     }
     
-boolean FileWrite(double balance){
+boolean FileWritea(double balance){
 		
 		
 		try{
@@ -122,33 +113,8 @@ boolean FileWrite(double balance){
 		}
 		return true;
 	}
-public double getBalance(int accountNumber, int accountPin) {
-    if (password.equals(accountPin))
-    {
-    	double balance = Integer.parseInt(sBalance);
-        return balance;
-    }
-    else
-        return -1.0;
-}
-public double deposit(int accountNumber, int accountPin, double amount) {
-    if (password.equals(Integer.toString(accountPin))) {
-    	double balance = Integer.parseInt(sBalance);
-        balance = (int) model.deposit(amount);
-        if(FileWrite(balance))
-        {
-        	return balance;
-        }
-        else
-        {
-        	return -1;
-        }
-    }
-    else
-        return -1.0;
-}
 	
-	public boolean LogWriter(String actNum, double balance){
+	public boolean LogWriter(String actNum, int balance){
 		
 		String LogText = null;
 		

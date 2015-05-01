@@ -85,7 +85,7 @@ public class Control {
   }
     
     public double withdraw(int accountNumber, int accountPin, double amount) {
-    	double balance = Integer.parseInt(sBalance);
+    	double balance = Double.parseDouble(sBalance);
         if (password.equals(Integer.toString(accountPin))) {
         	double x = balance;
         		balance = model.withdrawal(amount);
