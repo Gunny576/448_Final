@@ -78,36 +78,4 @@ public class Control {
         }
     return true;
   }
-    
-	public boolean FileWrite(double balance){
-		
-		
-		try{
-			PrintWriter writer = new PrintWriter(filename , "UTF-8");
-			writer.write(password);
-			writer.write((int) balance);
-			writer.close();
-		}
-		
-		catch(Exception e){
-			return false;
-		}
-		return true;
-	}
-	
-	public boolean LogWriter(String actNum, double balance){
-		
-		String LogText = null;
-		
-		try{
-			PrintWriter writer = new PrintWriter(filename , "UTF-8");
-			writer.println(LogText); // logText will be created later.
-			writer.close();
-		}
-		catch(Exception e){
-			return false;
-		}
-		return true;
-	}
 }
-
