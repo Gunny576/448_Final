@@ -1,0 +1,29 @@
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+
+import javax.swing.JOptionPane;
+
+/**
+    Test run of the ATM program by Group 8.
+*/
+public class ATMRun {
+    public static void main(String[] args) {
+    	
+    	
+    	
+        try {
+        	String filename = Integer.toString(5020);
+        	filename += ".txt";
+        Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "utf-8"));
+        writer.write(5500);
+        writer.write(0);
+        }
+        catch (IOException e)
+        {
+        }
+
+    }
+}
