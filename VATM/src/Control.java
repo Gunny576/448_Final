@@ -1,13 +1,9 @@
 import java.awt.geom.Arc2D.Double;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Writer;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Scanner;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -15,17 +11,15 @@ import java.nio.file.Path;
 import javax.imageio.IIOException;
 public class Control {
      String password;
+     int accn;
 	 String sBalance;
 	 String filename;
 	 Model model;
-	public  void main(String Args[])
-	{
-
-	}
 	
 	
 	public boolean findAccount(int accountNumber)
 	{
+		accn = accountNumber;
 		//call for name
 		String name = Integer.toString(accountNumber);
 		BufferedReader br = null;
@@ -35,8 +29,6 @@ public class Control {
 			name += ".txt";
 			filename = name;
 			double balance = 0;
-			
-			//br = new BufferedReader(new FileReader("src/database.txt"));
 			br = new BufferedReader(new FileReader(name));
 			password = br.readLine();
 			sBalance = br.readLine();
@@ -48,6 +40,8 @@ public class Control {
 			//{
 				//get new input
 			//}
+			LogWriter("Login", accountNumber, balance, 0);
+			br.close();
 			}
 		 catch (IOException e) {
 			 return false;
@@ -61,6 +55,7 @@ public class Control {
 			}
 		}
 	}
+		 
 		 return true;
 	}
 	public boolean tryPin(int account, int pin)
@@ -99,6 +94,7 @@ public class Control {
 			else if(FileWrite(balance))
             {
             	sBalance = java.lang.Double.toString(balance);
+            	LogWriter("Withdrawal", accountNumber, balance, amount);
                 return balance;
             }
             else
@@ -141,6 +137,7 @@ public double deposit(int accountNumber, int accountPin, double amount) {
         if(FileWrite(balance))
         {
             sBalance = java.lang.Double.toString(balance);
+            LogWriter("Deposit", accountNumber, balance, amount);
             return balance;
         }
         else
@@ -152,30 +149,36 @@ public double deposit(int accountNumber, int accountPin, double amount) {
         return -1.0;
 }
 	
-	public boolean LogWriter(String actNum, double balance){
-		
-		String LogText = null;
-		
-		try{
-			PrintWriter writer = new PrintWriter(filename , "UTF-8");
-			writer.println(LogText); // logText will be created later.
-			writer.close();
-		}
-		catch(Exception e){
-			return false;
-		}
-		return true;
+	public void LogWriter(String Operation, int actNum, double bal, double change){
+		String LogString = "";
+			 LogString = model.log(Operation, actNum, bal, change);
+				try {
+					PrintWriter out = new PrintWriter(new java.io.BufferedWriter(new java.io.FileWriter("logfile.log", true)));
+					String timeStamp = "Action Taken at: ";
+					timeStamp += new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+				    java.util.Date date= new java.util.Date();
+				    out.println(timeStamp);
+				    out.println(LogString);
+				    out.close();
+				}
+				
+				catch (IOException e) {
+
+				System.out.println("handled");
+			}	
 	}
 	
     public void closeAccount() {
     	try {
     	    
     	    File file = new File(filename);
+       	    LogWriter("Closed", accn, 0, 0);
     	    file.delete();
+ 
     	} catch (Exception e) {
     	}
     }
-}
 
+}
 	
 

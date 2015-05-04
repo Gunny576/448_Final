@@ -1,0 +1,40 @@
+import java.text.SimpleDateFormat;
+import java.util.Scanner;
+import java.io.*;
+import java.sql.Timestamp;
+import java.util.Date;
+
+public class log {
+
+		public void incrementByOne(){
+			String LogString = "";
+				try {
+					PrintWriter out = new PrintWriter(new java.io.BufferedWriter(new java.io.FileWriter("logfile.log", true)));
+					String timeStamp = "Action Taken at: ";
+					timeStamp += new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+				    java.util.Date date= new java.util.Date();
+				    out.println(timeStamp);
+				    out.println(LogString);
+
+				}
+				
+				catch (IOException e) {
+				    //exception handling left as an exercise for the reader
+
+				System.out.println("handled");
+			
+		}
+			}	
+		
+		
+		public static void main(String[] args){
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
