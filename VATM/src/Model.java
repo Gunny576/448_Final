@@ -36,4 +36,20 @@ public class Model {
 		}
 		
 	}
+	public String log(String Operation, int accountNum, double balance, double change){
+		String LogString = null;
+		if(Operation == "Deposit"){
+			LogString = ("Account: "+ accountNum + "has made a deposit of " + change + "the new balance is " + balance + ".");
+		}
+		if(Operation == "Withdrawal"){
+			LogString = ("Account: "+ accountNum + "has made a withdrawal of " + change + "the new balance is " + balance + ".");
+		}
+		if(Operation == "Closed"){
+			LogString = ("Account: "+ accountNum + "has closed their account.");
+		}
+		if(Operation == "Login"){
+			LogString = ("Account: " + accountNum + "has logged in.");
+		}
+		return LogString;
+	}
 }
