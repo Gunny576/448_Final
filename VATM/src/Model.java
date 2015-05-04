@@ -41,14 +41,17 @@ public class Model {
 		if(Operation == "Deposit"){
 			LogString = ("Account: "+ accountNum + " has made a deposit of: " + change + " the new balance is: $" + balance);
 		}
-		if(Operation == "Withdrawal"){
+		else if(Operation == "Withdrawal"){
 			LogString = ("Account: "+ accountNum + " has made a withdrawal of: " + change + " the new balance is: $" + balance);
 		}
-		if(Operation == "Closed"){
+		else if(Operation == "Closed"){
 			LogString = ("Account: "+ accountNum + " has closed their account.");
 		}
-		if(Operation == "Login"){
+		else if(Operation == "Login"){
 			LogString = ("Account: " + accountNum + " has logged in.");
+		}
+		else if(Operation == "Create"){
+			LogString = ("Account: " + accountNum + " has been created.");
 		}
 		return LogString;
 	}

@@ -40,7 +40,6 @@ public class Control {
 			//{
 				//get new input
 			//}
-			LogWriter("Login", accountNumber, balance, 0);
 			br.close();
 			}
 		 catch (IOException e) {
@@ -60,8 +59,10 @@ public class Control {
 	}
 	public boolean tryPin(int account, int pin)
 	{
-		if (Integer.parseInt(password) == pin)
-		    return true;
+		if (Integer.parseInt(password) == pin) {
+			LogWriter("Login", account, java.lang.Double.parseDouble(sBalance), 0);
+			return true;
+		}
 		return false;
 	}
     public boolean createAccount(int accountNumber, int accountPin) {
@@ -75,6 +76,7 @@ public class Control {
         	writer.println("0.0");
         	writer.close();
         	model = new Model(0.0);
+        	LogWriter("Create", accountNumber, java.lang.Double.parseDouble(sBalance), 0);
         }
         catch (IOException e)
         {
