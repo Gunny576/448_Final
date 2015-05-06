@@ -1,0 +1,38 @@
+//Control Module
+//Handles all operations adjusting the balacnce of an account.
+public class Model {
+	public Model()
+	{
+		
+	}
+	double accountBalance = 0;
+	
+	//sets the balance
+	public Model(double balance){
+		
+		accountBalance = balance;
+		
+	}
+	
+	//adds money to the balance.
+	public double deposit (double cash){
+		
+		accountBalance += cash;
+		return accountBalance;
+		
+	}
+	
+	//subtracts money from the balance.
+	public double withdrawal (double cash){
+		
+		//makes sure the user doesn't withdrawal more than they have.
+		if(accountBalance - cash >= 0){
+			
+			accountBalance -= cash;
+			
+		}
+		
+		return accountBalance;
+		
+	}
+}

@@ -1,0 +1,66 @@
+	import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Scanner;
+import java.sql.Timestamp;
+import java.util.Date;
+
+public class log {
+
+		public static void incrementByOne(){
+			String LogString = "";
+				try {
+					PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("logfile.log", true)));
+					String timeStamp = "Action Taken at: ";
+					timeStamp += new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+				    java.util.Date date= new java.util.Date();
+				    out.println(timeStamp);
+				    out.println(LogString);
+
+				}
+				
+				catch (IOException e) {
+				    //exception handling left as an exercise for the reader
+
+				System.out.println("handled");
+			
+		}
+			}	
+		
+		public void data(){
+try{
+	
+			File input = new File("test.txt");
+			File temp = new File("test1.txt");
+			Scanner sc = new Scanner(input);
+			PrintWriter pw = new PrintWriter(temp);
+			
+			int i = sc.nextInt();
+			i += 1;
+			pw.write(Integer.toString(i));
+			
+			sc.close();
+			pw.close();
+			
+			input.delete();
+			temp.renameTo(input);
+			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		}
+		
+		public static void main(String[] args){
+			
+			incrementByOne();
+			
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	

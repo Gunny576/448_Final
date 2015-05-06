@@ -9,12 +9,12 @@ public class FileWriter {
 	
 	String fileName = null;
 	
-	public boolean FileWrite(String actNum, double balance){
+	public boolean FileWrite(String actPin, double balance){
 		
 		
 		try{
 			PrintWriter writer = new PrintWriter(fileName , "UTF-8");
-			writer.write(actNum);
+			writer.write(actPin);
 			writer.write((int) balance);
 			writer.close();
 		}

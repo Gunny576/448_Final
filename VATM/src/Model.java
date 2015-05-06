@@ -1,7 +1,10 @@
 //Control Module
 //Handles all operations adjusting the balacnce of an account.
 public class Model {
-	
+	public Model()
+	{
+		
+	}
 	double accountBalance = 0;
 	
 	//sets the balance
@@ -26,10 +29,30 @@ public class Model {
 		if(accountBalance - cash >= 0){
 			
 			accountBalance -= cash;
-			
+			return accountBalance;
+		}
+		else {
+		    return -1.0;
 		}
 		
-		return accountBalance;
-		
+	}
+	public String log(String Operation, int accountNum, double balance, double change){
+		String LogString = null;
+		if(Operation == "Deposit"){
+			LogString = ("Account: "+ accountNum + " has made a deposit of: " + change + " the new balance is: $" + balance);
+		}
+		else if(Operation == "Withdrawal"){
+			LogString = ("Account: "+ accountNum + " has made a withdrawal of: " + change + " the new balance is: $" + balance);
+		}
+		else if(Operation == "Closed"){
+			LogString = ("Account: "+ accountNum + " has closed their account.");
+		}
+		else if(Operation == "Login"){
+			LogString = ("Account: " + accountNum + " has logged in.");
+		}
+		else if(Operation == "Create"){
+			LogString = ("Account: " + accountNum + " has been created.");
+		}
+		return LogString;
 	}
 }
