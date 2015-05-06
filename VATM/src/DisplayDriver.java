@@ -4,6 +4,7 @@ import javax.swing.JFrame;
     Digital Automated Teller Machine.
 */
 public class DisplayDriver {
+    // Private internal variables
     private int state;
     private int prevState;
     private int accountNumber;
@@ -11,6 +12,7 @@ public class DisplayDriver {
     private int accountPin;
     private Control theBank;
     
+    // State constants
     public static final int START = 1;
     public static final int ACCTFAIL = 2;
     public static final int PIN = 3;
@@ -36,14 +38,16 @@ public class DisplayDriver {
         Initialization method to keep the constructor clean
     */   
     private void init() {
+        // Initialize internal variables
         accountNumber = -1;
         newAccountNumber = -1;
         accountPin = -1;
         state = START;
         prevState = 0;
         
+        // Create the ATMFrame object
         JFrame frame = new ATMFrame(this);
-        frame.setTitle("Group 8 Bank ATM");        
+        frame.setTitle("Virtual ATM - First Bank of Group 8");        
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
@@ -54,7 +58,7 @@ public class DisplayDriver {
         @param number the account number.
     */
     public void setAccountNumber(int number) {
-        assert state == START || state == ACCTFAIL;
+        //assert state == START || state == ACCTFAIL;
         prevState = state;
         if (theBank.findAccount(number)) {
             accountNumber = number;
@@ -67,10 +71,10 @@ public class DisplayDriver {
     /** 
         Gets the current account number. 
         (Precondition: state is TRANSACT)
-        @return the balance
+        @return the account number
     */
     public int getAccountNumber() {
-        assert state == TRANSACT;
+        //assert state == TRANSACT;
         return accountNumber;
     }
 
@@ -81,7 +85,7 @@ public class DisplayDriver {
         @param pin the PIN to attempt
     */
     public void attemptPin(int pin) {
-        assert state == PIN;
+        //assert state == PIN;
         prevState = state;
         if (theBank.tryPin(accountNumber, pin)) {
             accountPin = pin;
@@ -92,7 +96,7 @@ public class DisplayDriver {
     }
     
     public void createAccount() {
-    	assert state == START || state == ACCTFAIL;
+    	//assert state == START || state == ACCTFAIL;
     	prevState = state;
     	state = CREATEACCT;
     }
@@ -103,7 +107,7 @@ public class DisplayDriver {
 	    @param accountNumber the number of the new account
 	*/
     public boolean createAccountNumber(int aNumber) {
-    	assert state == CREATEACCT;
+    	//assert state == CREATEACCT;
     	if (theBank.findAccount(aNumber)) {
     		back();
     		return false;
@@ -122,7 +126,7 @@ public class DisplayDriver {
 	    @param accountPin the new PIN
 	*/
     public boolean createPin(int aPin) {
-    	assert state == CREATEPIN;
+    	//assert state == CREATEPIN;
     	if (aPin >= 1000 && aPin <= 9999) {
     		accountNumber = newAccountNumber;
     		accountPin = aPin;
@@ -140,7 +144,7 @@ public class DisplayDriver {
         (Precondition: state is TRANSACT)
     */
     public void selectWithdraw() {
-        assert state == TRANSACT;
+        //assert state == TRANSACT;
         prevState = state;
         state = WITHDRAW;
     }
@@ -151,7 +155,7 @@ public class DisplayDriver {
         @param value the amount to withdraw
     */
     public double withdraw(double value) {  
-        assert state == TRANSACT;
+        //assert state == TRANSACT;
         double result = theBank.withdraw(accountNumber, accountPin, value);
         back();
         if (result >= 0) {
@@ -167,7 +171,7 @@ public class DisplayDriver {
         (Precondition: state is TRANSACT)
     */
     public void selectDeposit() {
-        assert state == TRANSACT;
+        //assert state == TRANSACT;
         prevState = state;
         state = DEPOSIT;
     }
@@ -178,7 +182,7 @@ public class DisplayDriver {
         @param value the amount to deposit
     */
     public double deposit(double value) {  
-        assert state == TRANSACT;
+        //assert state == TRANSACT;
         double result = theBank.deposit(accountNumber, accountPin, value);
         back();
         if (result >= 0) {
@@ -195,7 +199,7 @@ public class DisplayDriver {
         @return the balance
     */
     public double getBalance() {  
-        assert state == TRANSACT;
+        //assert state == TRANSACT;
         return theBank.getBalance(accountNumber, accountPin);
     }
     
@@ -203,7 +207,7 @@ public class DisplayDriver {
 	    Closes the bank account.
 	*/
     public void closeAccount() {
-    	assert state == TRANSACT;
+    	//assert state == TRANSACT;
     	state = CLOSED;
     	theBank.closeAccount();
     }

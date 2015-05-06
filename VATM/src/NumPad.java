@@ -13,16 +13,20 @@ import javax.swing.border.EmptyBorder;
 */
 public class NumPad extends JPanel {
     /**
-     * Default serial version UID
+     * Default serial version UID for the JPanel
      */
     private static final long serialVersionUID = 1L;
     
+    // Swing components
     private JPanel buttonPanel;
     private JButton clearButton;
     private JLabel display;
+    
+    // Private internal variables
     private String pinString;
     private int state;
     
+    // State variables - clones those in DisplayDriver
     public static final int START = 1;
     public static final int ACCTFAIL = 2;
     public static final int PIN = 3;
@@ -45,6 +49,7 @@ public class NumPad extends JPanel {
         Initialization method to keep the constructor clean.
     */
     private void init() {
+        // Set the layout of the JPanel
         setLayout(new BorderLayout());
         
         // Add display field
@@ -75,6 +80,9 @@ public class NumPad extends JPanel {
         clearButton = new JButton("CLR");
         buttonPanel.add(clearButton);
 
+        /**
+            An action listener for the CLR button
+        */
         class ClearButtonListener implements ActionListener {  
             public void actionPerformed(ActionEvent event) {  
                 display.setText("");
@@ -85,6 +93,7 @@ public class NumPad extends JPanel {
         clearButton.addActionListener(new 
                 ClearButtonListener());        
         
+        // Create the format for the number pad
         add(buttonPanel, "Center");
         display.setPreferredSize(new Dimension(buttonPanel.getWidth(), 20));
         display.setMinimumSize(new Dimension(buttonPanel.getWidth(), 20));
@@ -98,6 +107,9 @@ public class NumPad extends JPanel {
         @param label the button label
     */
     private void addButton(final String label) {  
+        /**
+            An action listener for a digit button
+        */
         class DigitButtonListener implements ActionListener {  
             public void actionPerformed(ActionEvent event) {  
 
@@ -107,6 +119,7 @@ public class NumPad extends JPanel {
                 else if (label.equals(".") && (state == START || state == ACCTFAIL || state == PIN || state == PINFAIL || state == CREATEACCT ||state == CREATEPIN))
                     return;
                 else if (state == PIN || state == PINFAIL || state == CREATEPIN) {
+                    // Don't allow a pin to be greater than 4 digits
                     if (display.getText().length() >= 4)
                         return;
                     else {
@@ -115,6 +128,7 @@ public class NumPad extends JPanel {
                         display.setText(display.getText() + '*');
                     }
                 }
+                // Don't allow a monetary value to have more than 2 decimal places
                 else if (display.getText().contains(".") && display.getText().substring(display.getText().indexOf('.')).length() > 2) {
                     return;
                 }
@@ -124,6 +138,7 @@ public class NumPad extends JPanel {
             }
         }
 
+        // Add the button to the panel
         JButton button = new JButton(label);
         buttonPanel.add(button);
         ActionListener listener = new DigitButtonListener();
@@ -155,7 +170,7 @@ public class NumPad extends JPanel {
     }
     
     /** 
-        Sets the current ATM state.
+        Sets the current ATM state. Used to synchronize states between DisplayDriver and NumPad.
         @param aState the state of the ATM
     */
     public void setState(int aState) {

@@ -12,9 +12,11 @@ import javax.swing.JOptionPane;
 */
 public class ATMRun {
     public static void main(String[] args) {
+        // Declare the DisplayDriver (the View)
         DisplayDriver ATMdisplay;
 
         try {
+            // Create the Control object and instantiate the DisplayDriver
             Control theBank = new Control();
             ATMdisplay = new DisplayDriver(theBank);
         }
